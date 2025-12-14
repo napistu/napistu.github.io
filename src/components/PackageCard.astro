@@ -1,0 +1,62 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  description: string;
+  badges?: string[];
+}
+
+const { name, url, description, badges = [] } = Astro.props;
+---
+
+<div class="package">
+  <h3><a href={url}>{name}</a></h3>
+  <p>{description}</p>
+  {badges.length > 0 && (
+    <div class="badges">
+      {badges.map((badge) => (
+        <img src={badge} alt="Badge" />
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .package {
+    background-color: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 6px;
+    border-left: 4px solid var(--light-green);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .package:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 58, 46, 0.15);
+  }
+
+  h3 a {
+    color: var(--dark-green);
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    color: var(--light-green);
+  }
+
+  p {
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .badges img {
+    height: 20px;
+  }
+</style>

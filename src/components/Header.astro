@@ -1,0 +1,91 @@
+---
+// Header component
+---
+
+<header>
+  <div class="header-content">
+    <div class="header-text">
+      <h1>Napistu</h1>
+      <p class="tagline">Genome-Scale Mechanistic Networks</p>
+    </div>
+    <div class="header-logo">
+      <img src="/napistu_logo.png" alt="Napistu Logo" class="logo" />
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    background-color: var(--dark-green);
+    border-radius: 0 0 8px 8px;
+    padding: 3rem 2rem 2rem;
+  }
+
+  .header-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .header-text {
+    text-align: left;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo {
+    width: 160px;
+    height: auto;
+    filter: brightness(0) invert(1); /* Makes the black logo white */
+  }
+
+  h1 {
+    color: var(--white);
+    font-size: 3.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .tagline {
+    color: var(--medium-gray);
+    font-size: 1.3rem;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    header {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .header-content {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .header-text {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+    }
+
+    .logo {
+      width: 120px;
+    }
+  }
+</style>

@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import PackageCard from '../components/PackageCard.astro';
+---
+
+<BaseLayout title="Napistu - Genome-Scale Mechanistic Networks">
+  <div class="container">
+    <Header />
+
+    <main>
+      <section class="intro">
+        <p>
+          Napistu is an approach for creating and working with genome-scale mechanistic networks. 
+          Aggregate pathways from multiple sources (Reactome, STRING, TRRUST), refine them with 
+          additional information, and transform them into graphical networks for molecular 
+          neighborhood analysis, path finding, and network propagation.
+        </p>
+      </section>
+
+      <section class="packages">
+        <h2>Core Packages</h2>
+        <div class="package-grid">
+          <PackageCard
+            name="napistu-py"
+            url="https://github.com/napistu/napistu-py"
+            description="Python library for pathway representations and network-based searches"
+            badges={[
+              "https://badge.fury.io/py/napistu.svg",
+              "https://readthedocs.org/projects/napistu/badge/?version=latest"
+            ]}
+          />
+          <PackageCard
+            name="napistu-r"
+            url="https://github.com/napistu/napistu-r"
+            description="R library for network visualization and utilities"
+            badges={[
+              "https://github.com/napistu/napistu-r/actions/workflows/pkgdown.yaml/badge.svg"
+            ]}
+          />
+          <PackageCard
+            name="napistu-torch"
+            url="https://github.com/napistu/napistu-torch"
+            description="PyTorch framework for graph neural networks on biological pathways"
+          />
+        </div>
+      </section>
+
+      <section class="features">
+        <h2>Key Features</h2>
+        <ul>
+          <li><strong>Unified Representation</strong> - Encode diverse data sources using the <code>sbml_dfs</code> structure</li>
+          <li><strong>Consensus Models</strong> - Aggregate complementary sources into comprehensive networks</li>
+          <li><strong>Network Analysis</strong> - Translate pathways into genome-scale graphs for propagation and search</li>
+          <li><strong>Machine Learning</strong> - Train graph neural networks on biological networks</li>
+        </ul>
+      </section>
+
+      <section class="resources">
+        <h2>Get Started</h2>
+        <div class="resource-links">
+          <a href="https://github.com/napistu/napistu" class="button">Tutorials & Documentation</a>
+          <a href="https://napistu.readthedocs.io/" class="button">Python API Docs</a>
+          <a href="https://napistu.github.io/napistu-r/" class="button">R Package Docs</a>
+          <a href="https://github.com/napistu/napistu/issues" class="button">Issues & Support</a>
+        </div>
+      </section>
+
+      <section class="install">
+        <h2>Installation</h2>
+        <div class="install-code">
+          <div class="code-block">
+            <span class="label">Python</span>
+            <code>pip install napistu</code>
+          </div>
+          <div class="code-block">
+            <span class="label">R</span>
+            <code>remotes::install_github("napistu/napistu-r")</code>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Napistu is a rebrand and extension of <a href="https://github.com/calico/opencpr">Calico Pathway Resources (CPR)</a></p>
+      <p>© 2024 Napistu Project | <a href="https://github.com/napistu">GitHub Organization</a></p>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  main {
+    background-color: var(--white);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(26, 58, 46, 0.1);
+    margin-top: 3rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  section:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    color: var(--dark-green);
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--light-green);
+  }
+
+  /* Intro */
+  .intro p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--dark-gray);
+  }
+
+  /* Packages */
+  .package-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Features */
+  .features ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .features li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--medium-gray);
+    color: var(--dark-gray);
+  }
+
+  .features li:last-child {
+    border-bottom: none;
+  }
+
+  .features strong {
+    color: var(--dark-green);
+  }
+
+  .features code {
+    background-color: var(--light-gray);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: var(--medium-green);
+  }
+
+  /* Resources */
+  .resource-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .button {
+    display: block;
+    padding: 0.9rem 1.5rem;
+    background-color: var(--medium-green);
+    color: var(--white);
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-weight: 500;
+  }
+
+  .button:hover {
+    background-color: var(--light-green);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  /* Installation */
+  .install-code {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .code-block {
+    background-color: var(--dark-green);
+    padding: 1.5rem;
+    border-radius: 6px;
+  }
+
+  .code-block .label {
+    display: block;
+    color: var(--accent-green);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .code-block code {
+    display: block;
+    color: var(--white);
+    font-size: 0.95rem;
+    background: none;
+    padding: 0;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem 0 1rem;
+    margin-top: 3rem;
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+  }
+
+  footer p {
+    margin-bottom: 0.5rem;
+  }
+
+  footer a {
+    color: var(--medium-green);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+
+    main {
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .package-grid,
+    .resource-links,
+    .install-code {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

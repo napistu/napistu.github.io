@@ -10,80 +10,176 @@ import PackageCard from '../components/PackageCard.astro';
 
     <main>
       <section class="intro">
-        <p>
-          Napistu is an approach for creating and working with genome-scale mechanistic networks. 
-          Aggregate pathways from multiple sources (Reactome, STRING, TRRUST), refine them with 
-          additional information, and transform them into graphical networks for molecular 
-          neighborhood analysis, path finding, and network propagation.
+        <p class="lead">
+          Napistu is an open-source project for creating and mining genome-scale networks of cellular physiology.
         </p>
       </section>
 
-      <section class="packages">
-        <h2>Core Packages</h2>
-        <div class="package-grid">
-          <PackageCard
-            name="napistu-py"
-            url="https://github.com/napistu/napistu-py"
-            description="Python library for pathway representations and network-based searches"
-            badges={[
-              "https://badge.fury.io/py/napistu.svg",
-              "https://readthedocs.org/projects/napistu/badge/?version=latest"
-            ]}
-          />
-          <PackageCard
-            name="napistu-r"
-            url="https://github.com/napistu/napistu-r"
-            description="R library for network visualization and utilities"
-            badges={[
-              "https://github.com/napistu/napistu-r/actions/workflows/pkgdown.yaml/badge.svg"
-            ]}
-          />
-          <PackageCard
-            name="napistu-torch"
-            url="https://github.com/napistu/napistu-torch"
-            description="PyTorch framework for graph neural networks on biological pathways"
-          />
-        </div>
-      </section>
-
-      <section class="features">
-        <h2>Key Features</h2>
+      <section class="features no-header">
         <ul>
-          <li><strong>Unified Representation</strong> - Encode diverse data sources using the <code>sbml_dfs</code> structure</li>
-          <li><strong>Consensus Models</strong> - Aggregate complementary sources into comprehensive networks</li>
-          <li><strong>Network Analysis</strong> - Translate pathways into genome-scale graphs for propagation and search</li>
-          <li><strong>Machine Learning</strong> - Train graph neural networks on biological networks</li>
+          <li><strong>Unified Representation</strong> - Encode diverse data sources using the <code>sbml_dfs</code> structure to faithfully represent molecular biology and biochemistry</li>
+          <li><strong>Consensus Models</strong> - Aggregate complementary sources into comprehensive networks where high-quality but incomplete interactions are supported by more comprehensive yet speculative data sources</li>
+          <li><strong>Network Analysis</strong> - Translate pathway models into genome-scale graphical networks for propagation, search, and neighborhood discovery</li>
+          <li><strong>Machine Learning</strong> - Train graph neural networks on biological networks to predict regulatory interactions and pathway relationships</li>
+          <li><strong>Easy Access</strong> - Pre-processed pathway data available on Google Cloud Storage and HuggingFace; MCP server for AI agent integration; comprehensive CLI tools for common workflows</li>
         </ul>
       </section>
 
-      <section class="resources">
-        <h2>Get Started</h2>
-        <div class="resource-links">
-          <a href="https://github.com/napistu/napistu" class="button">Tutorials & Documentation</a>
-          <a href="https://napistu.readthedocs.io/" class="button">Python API Docs</a>
-          <a href="https://napistu.github.io/napistu-r/" class="button">R Package Docs</a>
-          <a href="https://github.com/napistu/napistu/issues" class="button">Issues & Support</a>
+      <section class="updates">
+        <h2>Recent Updates</h2>
+        <ul class="update-list">
+          <li>
+            <span class="date">2025-11-19</span>
+            <a href="https://www.shackett.org/napistu_torch/" target="_blank" rel="noopener">
+              Napistu meets PyTorch Geometric - Predicting Regulatory Interactions with Graph Neural Networks
+            </a>
+          </li>
+          <li>
+            <span class="date">2025-10-07</span>
+            <a href="https://www.shackett.org/octopus_network/" target="_blank" rel="noopener">
+              Napistu's Octopus: An 8-source human consensus pathway model
+            </a>
+          </li>
+          <li>
+            <span class="date">2025-09-04</span>
+            <a href="https://www.shackett.org/napistu_mcp/" target="_blank" rel="noopener">
+              Building AI-Friendly Scientific Software: A Model Context Protocol Journey
+            </a>
+          </li>
+          <li>
+            <span class="date">2025-08-27</span>
+            <a href="https://www.shackett.org/napistu_network_propagation/" target="_blank" rel="noopener">
+              Network Biology with Napistu, Part 2: Translating Statistical Associations into Biological Mechanisms
+            </a>
+          </li>
+          <li>
+            <span class="date">2025-08-19</span>
+            <a href="https://www.shackett.org/multiomic_profiles/" target="_blank" rel="noopener">
+              Network Biology with Napistu, Part 1: Creating Multimodal Disease Profiles
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="packages">
+        <h2>Packages</h2>
+        
+        <div class="package-detailed">
+          <h3>napistu-py</h3>
+          <p>
+            Core Python library for pathway representations and network-based searches. 
+            Provides the foundational <code>sbml_dfs</code> data structure, consensus network 
+            creation, and genome-scale graph construction.
+          </p>
+          <div class="package-links">
+            <a href="https://github.com/napistu/napistu-py" class="link-button">
+              <span class="icon">📦</span> GitHub
+            </a>
+            <a href="https://pypi.org/project/napistu/" class="link-button">
+              <span class="icon">🐍</span> PyPI
+            </a>
+            <a href="https://napistu.readthedocs.io/" class="link-button">
+              <span class="icon">📖</span> Documentation
+            </a>
+          </div>
+          <div class="quickstart">
+            <h4>Quick Start</h4>
+            <pre><code>pip install napistu
+
+# Download Reactome Functional Interactions data
+napistu ingestion reactome_fi reactome_fi.tsv
+
+# Integrate into SBML_dfs format
+napistu integrate reactome_fi reactome_fi.tsv reactome_fi.pkl
+
+# Summarize the pathway model
+napistu helpers summarize_sbml_dfs reactome_fi.pkl</code></pre>
+          </div>
+        </div>
+
+        <div class="package-detailed">
+          <h3>napistu-torch</h3>
+          <p>
+            PyTorch Geometric framework for training graph neural networks on biological pathways. 
+            Implements GraphSAGE, GraphConv, RotatE, and TransE architectures for predicting 
+            regulatory interactions and pathway relationships.
+          </p>
+          <div class="package-links">
+            <a href="https://github.com/napistu/napistu-torch" class="link-button">
+              <span class="icon">📦</span> GitHub
+            </a>
+            <a href="https://pypi.org/project/napistu-torch/" class="link-button">
+              <span class="icon">🐍</span> PyPI
+            </a>
+            <a href="https://napistu-torch.readthedocs.io/en/latest/" class="link-button">
+              <span class="icon">📖</span> Documentation
+            </a>
+            <a href="https://huggingface.co/Napistu" class="link-button">
+              <span class="icon">🤗</span> HuggingFace
+            </a>
+          </div>
+          <div class="quickstart">
+            <h4>Quick Start</h4>
+            <pre><code>pip install 'napistu-torch[pyg,lightning]'</code></pre>
+            <h4>Quick Start (macOS)</h4>
+            <pre><code>pip install torch==2.8.0
+pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.8.0+cpu.html
+pip install 'napistu-torch[pyg,lightning]'</code></pre>
+          </div>
+        </div>
+
+        <div class="package-detailed">
+          <h3>napistu-r</h3>
+          <p>
+            R library for network visualization and utilities. Provides R-based network 
+            visualization tools and integrates with the Python library for pathway analysis workflows.
+          </p>
+          <div class="package-links">
+            <a href="https://github.com/napistu/napistu-r" class="link-button">
+              <span class="icon">📦</span> GitHub
+            </a>
+            <a href="https://napistu.github.io/napistu-r/" class="link-button">
+              <span class="icon">📖</span> Documentation
+            </a>
+          </div>
+          <div class="quickstart">
+            <h4>Quick Start</h4>
+            <pre><code>remotes::install_github("napistu/napistu-r")
+
+library(dplyr)
+library(napistu)
+setup_napistu_list(create_napistu_config())
+species_id <- random_species(napistu_list)
+
+neighborhood_table <- create_neighborhood_table(
+    napistu_list,
+    species_id = species_id,
+    max_steps = 5L,
+    max_neighbors = 20L,
+)
+
+plot_neighborhoods(
+    napistu_list,
+    neighborhood_table,
+)</code></pre>
+          </div>
         </div>
       </section>
 
-      <section class="install">
-        <h2>Installation</h2>
-        <div class="install-code">
-          <div class="code-block">
-            <span class="label">Python</span>
-            <code>pip install napistu</code>
-          </div>
-          <div class="code-block">
-            <span class="label">R</span>
-            <code>remotes::install_github("napistu/napistu-r")</code>
-          </div>
+      <section class="resources">
+        <h2>Resources</h2>
+        <div class="resource-links">
+          <a href="https://github.com/napistu/napistu" class="button">Tutorials & Examples</a>
+          <a href="https://github.com/napistu/napistu/wiki" class="button">Wiki</a>
+          <a href="https://github.com/napistu/napistu/issues" class="button">Issues & Support</a>
+          <a href="https://www.shackett.org/" class="button">Blog</a>
         </div>
       </section>
     </main>
 
     <footer>
       <p>Napistu is a rebrand and extension of <a href="https://github.com/calico/opencpr">Calico Pathway Resources (CPR)</a></p>
-      <p>© 2024 Napistu Project | <a href="https://github.com/napistu">GitHub Organization</a></p>
+      <p>© 2025 Napistu Project | <a href="https://github.com/napistu">GitHub Organization</a></p>
     </footer>
   </div>
 </BaseLayout>
@@ -111,6 +207,10 @@ import PackageCard from '../components/PackageCard.astro';
     margin-bottom: 0;
   }
 
+  section.no-header {
+    margin-top: -1rem;
+  }
+
   h2 {
     color: var(--dark-green);
     font-size: 1.8rem;
@@ -120,19 +220,34 @@ import PackageCard from '../components/PackageCard.astro';
     border-bottom: 2px solid var(--light-green);
   }
 
-  /* Intro */
-  .intro p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: var(--dark-gray);
+  h3 {
+    color: var(--medium-green);
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
   }
 
-  /* Packages */
-  .package-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+  h4 {
+    color: var(--dark-gray);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  /* Intro */
+  .intro p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--dark-gray);
+    margin-bottom: 1rem;
+  }
+
+  .intro .lead {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--dark-green);
+    margin-bottom: 1.25rem;
   }
 
   /* Features */
@@ -145,6 +260,7 @@ import PackageCard from '../components/PackageCard.astro';
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--medium-gray);
     color: var(--dark-gray);
+    line-height: 1.6;
   }
 
   .features li:last-child {
@@ -161,6 +277,121 @@ import PackageCard from '../components/PackageCard.astro';
     border-radius: 3px;
     font-size: 0.9rem;
     color: var(--medium-green);
+  }
+
+  /* Updates */
+  .update-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .update-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--medium-gray);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .update-list li:last-child {
+    border-bottom: none;
+  }
+
+  .update-list .date {
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 90px;
+  }
+
+  .update-list a {
+    color: var(--light-green);
+    line-height: 1.5;
+  }
+
+  /* Packages */
+  .package-detailed {
+    background-color: var(--light-gray);
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--light-green);
+    margin-bottom: 2rem;
+  }
+
+  .package-detailed:last-child {
+    margin-bottom: 0;
+  }
+
+  .package-detailed p {
+    color: var(--dark-gray);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .package-detailed code {
+    background-color: var(--white);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: var(--medium-green);
+  }
+
+  .package-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--white);
+    color: var(--medium-green);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid var(--medium-gray);
+  }
+
+  .link-button:hover {
+    background-color: var(--medium-green);
+    color: var(--white);
+    border-color: var(--medium-green);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  .link-button .icon {
+    font-size: 1.1rem;
+  }
+
+  .quickstart {
+    background-color: var(--white);
+    padding: 1.25rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+  }
+
+  .quickstart pre {
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  .quickstart code {
+    display: block;
+    background-color: var(--dark-green);
+    color: var(--white);
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre;
   }
 
   /* Resources */
@@ -187,38 +418,6 @@ import PackageCard from '../components/PackageCard.astro';
     background-color: var(--light-green);
     transform: translateY(-1px);
     text-decoration: none;
-  }
-
-  /* Installation */
-  .install-code {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .code-block {
-    background-color: var(--dark-green);
-    padding: 1.5rem;
-    border-radius: 6px;
-  }
-
-  .code-block .label {
-    display: block;
-    color: var(--accent-green);
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .code-block code {
-    display: block;
-    color: var(--white);
-    font-size: 0.95rem;
-    background: none;
-    padding: 0;
   }
 
   /* Footer */
@@ -253,9 +452,24 @@ import PackageCard from '../components/PackageCard.astro';
       font-size: 1.5rem;
     }
 
-    .package-grid,
-    .resource-links,
-    .install-code {
+    .update-list li {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .update-list .date {
+      min-width: auto;
+    }
+
+    .package-links {
+      flex-direction: column;
+    }
+
+    .link-button {
+      justify-content: center;
+    }
+
+    .resource-links {
       grid-template-columns: 1fr;
     }
   }

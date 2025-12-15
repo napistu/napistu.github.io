@@ -1,0 +1,561 @@
+---
+// ChatSidebar.astro
+// Collapsible chat sidebar for Napistu landing page
+
+// Example prompts - edit these directly in this file
+// To add/remove/modify prompts, just edit this array
+const allPrompts = [
+  "How do I install Napistu?",
+  "What's the quickest way to get started with Napistu?",
+  "What's a consensus network?",
+  "How does Napistu integrate pathway data sources?",
+  "What's the SBML_dfs data structure?",
+  "Show me how to create a network from Reactome",
+  "How do I use the PyTorch package for GNN training?",
+  "How can I visualize pathway neighborhoods?",
+  "What data sources does Napistu support?",
+  "How do I customize network integration parameters?"
+];
+
+// Convert prompts to JSON for client-side use
+const promptsJson = JSON.stringify(allPrompts);
+---
+
+<!-- Toggle Button (Fixed Position) -->
+<button 
+  id="chat-toggle" 
+  class="chat-toggle"
+  aria-label="Toggle chat"
+>
+  <span class="toggle-open">💬 Chat</span>
+  <span class="toggle-close">× Hide</span>
+</button>
+
+<!-- Chat Sidebar -->
+<aside id="chat-sidebar" class="chat-sidebar">
+  <div class="chat-container">
+    <!-- Header -->
+    <header class="chat-header">
+      <h2>Ask about Napistu</h2>
+      <button id="chat-close" class="close-btn" aria-label="Close chat">×</button>
+    </header>
+
+    <!-- Messages Area -->
+    <div id="chat-messages" class="chat-messages">
+      <!-- Example prompts (shown when empty) -->
+      <div id="chat-examples" class="chat-examples">
+        <p class="examples-label">💡 Try asking:</p>
+        <div id="example-prompts"></div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area">
+      <div class="input-wrapper">
+        <textarea
+          id="chat-input"
+          class="chat-input"
+          placeholder="Ask a question..."
+          rows="1"
+        ></textarea>
+        <button id="chat-send" class="send-btn" aria-label="Send message">
+          →
+        </button>
+      </div>
+      <div id="rate-limit-info" class="rate-limit-info">
+        <span id="rate-limit-text">Loading...</span>
+      </div>
+      <div id="error-message" class="error-message"></div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* Toggle Button */
+  .chat-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--dark-green);
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    z-index: 1000;
+  }
+
+  .chat-toggle:hover {
+    background: var(--medium-green);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .chat-toggle .toggle-close {
+    display: none;
+  }
+
+  .chat-toggle.open .toggle-open {
+    display: none;
+  }
+
+  .chat-toggle.open .toggle-close {
+    display: inline;
+  }
+
+  /* Chat Sidebar */
+  .chat-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Header */
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: var(--dark-green);
+    color: white;
+  }
+
+  .chat-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  /* Messages Area */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chat-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .examples-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  #example-prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .example-prompt {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: #374151;
+    text-align: left;
+  }
+
+  .example-prompt:hover {
+    background: #f3f4f6;
+    border-color: var(--medium-green);
+    transform: translateX(4px);
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .message-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  .message-content {
+    background: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .message.user .message-content {
+    background: var(--light-green);
+    color: #1f2937;
+  }
+
+  .message.assistant .message-content {
+    background: #f9fafb;
+    color: #374151;
+  }
+
+  /* Input Area */
+  .chat-input-area {
+    border-top: 1px solid #e5e7eb;
+    padding: 1rem;
+    background: white;
+  }
+
+  .input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .chat-input {
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: none;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--medium-green);
+  }
+
+  .send-btn {
+    background: var(--dark-green);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .send-btn:hover:not(:disabled) {
+    background: var(--medium-green);
+  }
+
+  .send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .rate-limit-info {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+  }
+
+  .error-message {
+    font-size: 0.8rem;
+    color: #dc2626;
+    text-align: center;
+    margin-top: 0.5rem;
+    min-height: 1.2rem;
+  }
+
+  /* Loading State */
+  .loading {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .loading-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #9ca3af;
+    border-radius: 50%;
+    animation: loading 1.4s infinite;
+  }
+
+  .loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes loading {
+    0%, 80%, 100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .chat-sidebar {
+      width: 100%;
+    }
+
+    .chat-toggle {
+      bottom: 1rem;
+      right: 1rem;
+    }
+  }
+</style>
+
+<script define:vars={{ promptsJson }}>
+  // Parse prompts from server
+  const allPrompts = JSON.parse(promptsJson);
+
+  // DOM elements
+  const toggle = document.getElementById('chat-toggle');
+  const sidebar = document.getElementById('chat-sidebar');
+  const closeBtn = document.getElementById('chat-close');
+  const messagesArea = document.getElementById('chat-messages');
+  const examplesDiv = document.getElementById('chat-examples');
+  const examplePromptsDiv = document.getElementById('example-prompts');
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send');
+  const rateLimitText = document.getElementById('rate-limit-text');
+  const errorMessage = document.getElementById('error-message');
+
+  // State
+  let messages = [];
+  let isOpen = false;
+  let isLoading = false;
+
+  // API configuration
+  const API_BASE = 'https://napistu-mcp-server-844820030839.us-west1.run.app'; 
+
+  // Initialize
+  function init() {
+    loadRateLimit();
+    showRandomExamples();
+    
+    // Check saved state
+    const savedState = localStorage.getItem('chat-open');
+    if (savedState === 'true') {
+      openChat();
+    }
+  }
+
+  // Show 2 random example prompts
+  function showRandomExamples() {
+    const shuffled = [...allPrompts].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, 2);
+    
+    examplePromptsDiv.innerHTML = selected
+      .map(prompt => `<button class="example-prompt">${prompt}</button>`)
+      .join('');
+    
+    // Add click handlers
+    document.querySelectorAll('.example-prompt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        input.value = btn.textContent;
+        input.focus();
+      });
+    });
+  }
+
+  // Toggle sidebar
+  function openChat() {
+    isOpen = true;
+    sidebar.classList.add('open');
+    toggle.classList.add('open');
+    localStorage.setItem('chat-open', 'true');
+  }
+
+  function closeChat() {
+    isOpen = false;
+    sidebar.classList.remove('open');
+    toggle.classList.remove('open');
+    localStorage.setItem('chat-open', 'false');
+  }
+
+  toggle.addEventListener('click', () => {
+    if (isOpen) closeChat();
+    else openChat();
+  });
+
+  closeBtn.addEventListener('click', closeChat);
+
+  // Load rate limit info
+  async function loadRateLimit() {
+    try {
+      const response = await fetch(`${API_BASE}/api/stats`);
+      const data = await response.json();
+      
+      const remaining = data.rate_limits.per_hour;
+      rateLimitText.textContent = `${remaining} messages/hour remaining`;
+    } catch (err) {
+      rateLimitText.textContent = 'Rate limit info unavailable';
+    }
+  }
+
+  // Send message
+  async function sendMessage() {
+    const content = input.value.trim();
+    if (!content || isLoading) return;
+
+    // Add user message
+    addMessage('user', content);
+    input.value = '';
+    errorMessage.textContent = '';
+
+    // Hide examples after first message
+    if (examplesDiv) {
+      examplesDiv.style.display = 'none';
+    }
+
+    // Show loading
+    isLoading = true;
+    sendBtn.disabled = true;
+    const loadingId = addLoadingMessage();
+
+    try {
+      const response = await fetch(`${API_BASE}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+
+      removeLoadingMessage(loadingId);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to send message');
+      }
+
+      const data = await response.json();
+      addMessage('assistant', data.response);
+      loadRateLimit();
+
+    } catch (err) {
+      removeLoadingMessage(loadingId);
+      errorMessage.textContent = err.message;
+    } finally {
+      isLoading = false;
+      sendBtn.disabled = false;
+    }
+  }
+
+  // Add message to chat
+  function addMessage(role, content) {
+    messages.push({ role, content });
+    
+    const messageEl = document.createElement('div');
+    messageEl.className = `message ${role}`;
+    messageEl.innerHTML = `
+      <div class="message-label">${role === 'user' ? 'You' : 'Napistu'}</div>
+      <div class="message-content">${escapeHtml(content)}</div>
+    `;
+    
+    messagesArea.appendChild(messageEl);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+
+  // Loading message
+  function addLoadingMessage() {
+    const id = Date.now();
+    const loadingEl = document.createElement('div');
+    loadingEl.id = `loading-${id}`;
+    loadingEl.className = 'message assistant';
+    loadingEl.innerHTML = `
+      <div class="message-label">Napistu</div>
+      <div class="message-content loading">
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+      </div>
+    `;
+    
+    messagesArea.appendChild(loadingEl);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+    return id;
+  }
+
+  function removeLoadingMessage(id) {
+    const el = document.getElementById(`loading-${id}`);
+    if (el) el.remove();
+  }
+
+  // Escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Auto-resize textarea
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = input.scrollHeight + 'px';
+  });
+
+  // Send on Enter (Shift+Enter for newline)
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  // Initialize on load
+  init();
+</script>

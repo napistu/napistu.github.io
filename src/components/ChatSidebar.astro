@@ -2,6 +2,8 @@
 // ChatSidebar.astro
 // Collapsible chat sidebar for Napistu landing page
 
+import '../styles/markdown.css';
+
 // Example prompts - edit these directly in this file
 // To add/remove/modify prompts, just edit this array
 const allPrompts = [
@@ -357,7 +359,30 @@ const promptsJson = JSON.stringify(allPrompts);
   }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script define:vars={{ promptsJson }}>
+  // Wait for marked to be available
+  function waitForMarked() {
+    return new Promise((resolve) => {
+      if (typeof marked !== 'undefined') {
+        resolve();
+      } else {
+        setTimeout(() => waitForMarked().then(resolve), 100);
+      }
+    });
+  }
+  
+  // Configure marked for chat-friendly output (after it loads)
+  waitForMarked().then(() => {
+    marked.setOptions({
+      breaks: true,        // Convert \n to <br>
+      gfm: true,          // GitHub Flavored Markdown
+      headerIds: false,   // Don't add IDs to headers
+      mangle: false       // Don't mangle email addresses
+    });
+  });
+
   // Parse prompts from server
   const allPrompts = JSON.parse(promptsJson);
 
@@ -372,6 +397,7 @@ const promptsJson = JSON.stringify(allPrompts);
   const sendBtn = document.getElementById('chat-send');
   const rateLimitText = document.getElementById('rate-limit-text');
   const errorMessage = document.getElementById('error-message');
+  const markdownTest = document.getElementById('markdown-test');
 
   // State
   let messages = [];
@@ -382,7 +408,15 @@ const promptsJson = JSON.stringify(allPrompts);
   const API_BASE = 'https://napistu-mcp-server-844820030839.us-west1.run.app'; 
 
   // Initialize
-  function init() {
+  async function init() {
+    // Wait for marked to load
+    await waitForMarked();
+    
+    // Render test markdown
+    if (markdownTest) {
+      markdownTest.innerHTML = marked.parse(testMarkdown);
+    }
+    
     loadRateLimit();
     showRandomExamples();
     
@@ -456,9 +490,12 @@ const promptsJson = JSON.stringify(allPrompts);
     input.value = '';
     errorMessage.textContent = '';
 
-    // Hide examples after first message
+    // Hide examples and test message after first message
     if (examplesDiv) {
       examplesDiv.style.display = 'none';
+    }
+    if (markdownTest) {
+      markdownTest.parentElement.style.display = 'none';
     }
 
     // Show loading
@@ -499,9 +536,15 @@ const promptsJson = JSON.stringify(allPrompts);
     
     const messageEl = document.createElement('div');
     messageEl.className = `message ${role}`;
+    
+    // Render markdown for assistant, escape HTML for user
+    const contentHtml = role === 'assistant' 
+      ? marked.parse(content)
+      : escapeHtml(content);
+    
     messageEl.innerHTML = `
       <div class="message-label">${role === 'user' ? 'You' : 'Napistu'}</div>
-      <div class="message-content">${escapeHtml(content)}</div>
+      <div class="message-content">${contentHtml}</div>
     `;
     
     messagesArea.appendChild(messageEl);
@@ -533,7 +576,7 @@ const promptsJson = JSON.stringify(allPrompts);
     if (el) el.remove();
   }
 
-  // Escape HTML
+  // Escape HTML for user messages
   function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;

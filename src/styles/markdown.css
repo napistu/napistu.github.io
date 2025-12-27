@@ -1,0 +1,96 @@
+/* Markdown content styling for chat messages */
+
+.message-content :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 1em;
+    font-weight: 600;
+    margin: 0.5em 0 0.25em;
+    color: inherit;
+  }
+  
+  .message-content p {
+    margin: 0.5em 0;
+    line-height: 1.6;
+  }
+  
+  .message-content p:first-child {
+    margin-top: 0;
+  }
+  
+  .message-content p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .message-content code {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.85em;
+  }
+  
+  .message-content pre {
+    background: #2a2f2a;
+    padding: 0.75rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.75em 0;
+  }
+  
+  .message-content pre code {
+    background: none;
+    padding: 0;
+    color: #fff;
+  }
+  
+  .message-content a {
+    color: var(--medium-green);
+    text-decoration: underline;
+  }
+  
+  .message-content a:hover {
+    color: var(--light-green);
+  }
+  
+  .message-content ul, 
+  .message-content ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+  }
+  
+  .message-content li {
+    margin: 0.25em 0;
+    line-height: 1.5;
+  }
+  
+  .message-content strong {
+    font-weight: 600;
+    color: inherit;
+  }
+  
+  .message-content em {
+    font-style: italic;
+  }
+  
+  .message-content blockquote {
+    border-left: 3px solid var(--medium-green);
+    padding-left: 1em;
+    margin: 0.5em 0;
+    color: #6b7280;
+  }
+  
+  /* Prevent markdown from breaking chat layout */
+  .message-content > *:first-child {
+    margin-top: 0;
+  }
+  
+  .message-content > *:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Handle nested lists */
+  .message-content ul ul,
+  .message-content ol ul,
+  .message-content ul ol,
+  .message-content ol ol {
+    margin: 0.25em 0;
+  }
